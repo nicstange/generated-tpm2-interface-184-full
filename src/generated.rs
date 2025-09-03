@@ -853,6 +853,159 @@ impl convert::TryFrom<u16> for TpmEccCurve {
     }
 }
 
+// TCG Algorithm Registry, page 31, table 25, TPMA_HASH_ALGS bits
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TpmaHashAlgs {
+    value: u32,
+}
+
+impl TpmaHashAlgs {
+    pub fn new() -> Self {
+        Self { value: 0u32 }
+    }
+
+    const ALG_SHA1_MASK: u32 = 1u32 << 0u32;
+
+    pub fn get_alg_sha1(&self) -> bool {
+        self.value & Self::ALG_SHA1_MASK != 0
+    }
+
+    pub fn set_alg_sha1(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SHA1_MASK;
+        } else {
+            self.value &= !Self::ALG_SHA1_MASK;
+        }
+    }
+
+    const ALG_SHA256_MASK: u32 = 1u32 << 1u32;
+
+    pub fn get_alg_sha256(&self) -> bool {
+        self.value & Self::ALG_SHA256_MASK != 0
+    }
+
+    pub fn set_alg_sha256(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SHA256_MASK;
+        } else {
+            self.value &= !Self::ALG_SHA256_MASK;
+        }
+    }
+
+    const ALG_SHA384_MASK: u32 = 1u32 << 2u32;
+
+    pub fn get_alg_sha384(&self) -> bool {
+        self.value & Self::ALG_SHA384_MASK != 0
+    }
+
+    pub fn set_alg_sha384(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SHA384_MASK;
+        } else {
+            self.value &= !Self::ALG_SHA384_MASK;
+        }
+    }
+
+    const ALG_SHA512_MASK: u32 = 1u32 << 3u32;
+
+    pub fn get_alg_sha512(&self) -> bool {
+        self.value & Self::ALG_SHA512_MASK != 0
+    }
+
+    pub fn set_alg_sha512(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SHA512_MASK;
+        } else {
+            self.value &= !Self::ALG_SHA512_MASK;
+        }
+    }
+
+    const ALG_SM3_256_MASK: u32 = 1u32 << 4u32;
+
+    pub fn get_alg_sm3_256(&self) -> bool {
+        self.value & Self::ALG_SM3_256_MASK != 0
+    }
+
+    pub fn set_alg_sm3_256(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SM3_256_MASK;
+        } else {
+            self.value &= !Self::ALG_SM3_256_MASK;
+        }
+    }
+
+    const ALG_SHA3_256_MASK: u32 = 1u32 << 5u32;
+
+    pub fn get_alg_sha3_256(&self) -> bool {
+        self.value & Self::ALG_SHA3_256_MASK != 0
+    }
+
+    pub fn set_alg_sha3_256(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SHA3_256_MASK;
+        } else {
+            self.value &= !Self::ALG_SHA3_256_MASK;
+        }
+    }
+
+    const ALG_SHA3_384_MASK: u32 = 1u32 << 6u32;
+
+    pub fn get_alg_sha3_384(&self) -> bool {
+        self.value & Self::ALG_SHA3_384_MASK != 0
+    }
+
+    pub fn set_alg_sha3_384(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SHA3_384_MASK;
+        } else {
+            self.value &= !Self::ALG_SHA3_384_MASK;
+        }
+    }
+
+    const ALG_SHA3_512_MASK: u32 = 1u32 << 7u32;
+
+    pub fn get_alg_sha3_512(&self) -> bool {
+        self.value & Self::ALG_SHA3_512_MASK != 0
+    }
+
+    pub fn set_alg_sha3_512(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ALG_SHA3_512_MASK;
+        } else {
+            self.value &= !Self::ALG_SHA3_512_MASK;
+        }
+    }
+
+    const RESERVED_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 31u32 + 8u32) << 8u32;
+
+    pub const fn marshalled_size() -> u16 {
+        mem::size_of::<u32>() as u16
+    }
+
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+        marshal_u32(buf, self.value)
+    }
+
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+        let (buf, value) = unmarshal_u32(buf)?;
+        let result = Self::try_from(value)?;
+        Ok((buf, result))
+    }
+}
+
+impl convert::TryFrom<u32> for TpmaHashAlgs {
+    type Error = TpmErr;
+
+    fn try_from(value: u32) -> Result<Self, TpmErr> {
+
+        if value & Self::RESERVED_MASK != 0 {
+            return Err(TpmErr::Rc(TpmRc::RESERVED_BITS));
+        }
+
+        Ok(Self { value })
+    }
+}
+
 // TCG TPM2 Library, Version 184, Part 2 -- Structures, page 42, table 9, TPM_CONSTANTS32 constants
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u32)]
@@ -2709,15 +2862,15 @@ impl TpmaAlgorithm {
     const RESERVED_MASK1: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 31u32 + 11u32) << 11u32;
     const RESERVED_MASK: u32 = Self::RESERVED_MASK0 | Self::RESERVED_MASK1;
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u32>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u32(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u32(buf)?;
         let result = Self::try_from(value)?;
         Ok((buf, result))
@@ -2950,15 +3103,15 @@ impl TpmaObject {
     const RESERVED_MASK3: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 31u32 + 20u32) << 20u32;
     const RESERVED_MASK: u32 = Self::RESERVED_MASK0 | Self::RESERVED_MASK1 | Self::RESERVED_MASK2 | Self::RESERVED_MASK3;
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u32>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u32(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u32(buf)?;
         let result = Self::try_from(value)?;
         Ok((buf, result))
@@ -3075,15 +3228,15 @@ impl TpmaSession {
 
     const RESERVED_MASK: u8 = 0xffu8 >> (8u32 - 1u32 - 4u32 + 3u32) << 3u32;
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u8>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u8(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u8(buf)?;
         let result = Self::try_from(value)?;
         Ok((buf, result))
@@ -3198,15 +3351,15 @@ impl TpmaLocality {
         self.value |= value;
     }
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u8>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u8(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u8(buf)?;
         let result = Self::from(value);
         Ok((buf, result))
@@ -3216,6 +3369,341 @@ impl TpmaLocality {
 impl convert::From<u8> for TpmaLocality {
     fn from(value: u8) -> Self {
         Self { value }
+    }
+}
+
+// TCG TPM2 Library, Version 184, Part 2 -- Structures, page 109, table 42, TPMA_PERMANENT bits
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TpmaPermanent {
+    value: u32,
+}
+
+impl TpmaPermanent {
+    pub fn new() -> Self {
+        Self { value: 0u32 }
+    }
+
+    const OWNER_AUTH_SET_MASK: u32 = 1u32 << 0u32;
+
+    pub fn get_owner_auth_set(&self) -> bool {
+        self.value & Self::OWNER_AUTH_SET_MASK != 0
+    }
+
+    pub fn set_owner_auth_set(&mut self, value: bool) {
+        if value {
+            self.value |= Self::OWNER_AUTH_SET_MASK;
+        } else {
+            self.value &= !Self::OWNER_AUTH_SET_MASK;
+        }
+    }
+
+    const ENDORSEMENT_AUTH_SET_MASK: u32 = 1u32 << 1u32;
+
+    pub fn get_endorsement_auth_set(&self) -> bool {
+        self.value & Self::ENDORSEMENT_AUTH_SET_MASK != 0
+    }
+
+    pub fn set_endorsement_auth_set(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ENDORSEMENT_AUTH_SET_MASK;
+        } else {
+            self.value &= !Self::ENDORSEMENT_AUTH_SET_MASK;
+        }
+    }
+
+    const LOCKOUT_AUTH_SET_MASK: u32 = 1u32 << 2u32;
+
+    pub fn get_lockout_auth_set(&self) -> bool {
+        self.value & Self::LOCKOUT_AUTH_SET_MASK != 0
+    }
+
+    pub fn set_lockout_auth_set(&mut self, value: bool) {
+        if value {
+            self.value |= Self::LOCKOUT_AUTH_SET_MASK;
+        } else {
+            self.value &= !Self::LOCKOUT_AUTH_SET_MASK;
+        }
+    }
+
+    const DISABLE_CLEAR_MASK: u32 = 1u32 << 8u32;
+
+    pub fn get_disable_clear(&self) -> bool {
+        self.value & Self::DISABLE_CLEAR_MASK != 0
+    }
+
+    pub fn set_disable_clear(&mut self, value: bool) {
+        if value {
+            self.value |= Self::DISABLE_CLEAR_MASK;
+        } else {
+            self.value &= !Self::DISABLE_CLEAR_MASK;
+        }
+    }
+
+    const IN_LOCKOUT_MASK: u32 = 1u32 << 9u32;
+
+    pub fn get_in_lockout(&self) -> bool {
+        self.value & Self::IN_LOCKOUT_MASK != 0
+    }
+
+    pub fn set_in_lockout(&mut self, value: bool) {
+        if value {
+            self.value |= Self::IN_LOCKOUT_MASK;
+        } else {
+            self.value &= !Self::IN_LOCKOUT_MASK;
+        }
+    }
+
+    const TPM_GENERATED_EPS_MASK: u32 = 1u32 << 10u32;
+
+    pub fn get_tpm_generated_eps(&self) -> bool {
+        self.value & Self::TPM_GENERATED_EPS_MASK != 0
+    }
+
+    pub fn set_tpm_generated_eps(&mut self, value: bool) {
+        if value {
+            self.value |= Self::TPM_GENERATED_EPS_MASK;
+        } else {
+            self.value &= !Self::TPM_GENERATED_EPS_MASK;
+        }
+    }
+
+    const RESERVED_MASK0: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 7u32 + 3u32) << 3u32;
+    const RESERVED_MASK1: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 31u32 + 11u32) << 11u32;
+    const RESERVED_MASK: u32 = Self::RESERVED_MASK0 | Self::RESERVED_MASK1;
+
+    pub const fn marshalled_size() -> u16 {
+        mem::size_of::<u32>() as u16
+    }
+
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+        marshal_u32(buf, self.value)
+    }
+
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+        let (buf, value) = unmarshal_u32(buf)?;
+        let result = Self::try_from(value)?;
+        Ok((buf, result))
+    }
+}
+
+impl convert::TryFrom<u32> for TpmaPermanent {
+    type Error = TpmErr;
+
+    fn try_from(value: u32) -> Result<Self, TpmErr> {
+
+        if value & Self::RESERVED_MASK != 0 {
+            return Err(TpmErr::Rc(TpmRc::RESERVED_BITS));
+        }
+
+        Ok(Self { value })
+    }
+}
+
+// TCG TPM2 Library, Version 184, Part 2 -- Structures, page 110, table 43, TPMA_STARTUP_CLEAR bits
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TpmaStartupClear {
+    value: u32,
+}
+
+impl TpmaStartupClear {
+    pub fn new() -> Self {
+        Self { value: 0u32 }
+    }
+
+    const PH_ENABLE_MASK: u32 = 1u32 << 0u32;
+
+    pub fn get_ph_enable(&self) -> bool {
+        self.value & Self::PH_ENABLE_MASK != 0
+    }
+
+    pub fn set_ph_enable(&mut self, value: bool) {
+        if value {
+            self.value |= Self::PH_ENABLE_MASK;
+        } else {
+            self.value &= !Self::PH_ENABLE_MASK;
+        }
+    }
+
+    const SH_ENABLE_MASK: u32 = 1u32 << 1u32;
+
+    pub fn get_sh_enable(&self) -> bool {
+        self.value & Self::SH_ENABLE_MASK != 0
+    }
+
+    pub fn set_sh_enable(&mut self, value: bool) {
+        if value {
+            self.value |= Self::SH_ENABLE_MASK;
+        } else {
+            self.value &= !Self::SH_ENABLE_MASK;
+        }
+    }
+
+    const EH_ENABLE_MASK: u32 = 1u32 << 2u32;
+
+    pub fn get_eh_enable(&self) -> bool {
+        self.value & Self::EH_ENABLE_MASK != 0
+    }
+
+    pub fn set_eh_enable(&mut self, value: bool) {
+        if value {
+            self.value |= Self::EH_ENABLE_MASK;
+        } else {
+            self.value &= !Self::EH_ENABLE_MASK;
+        }
+    }
+
+    const PH_ENABLE_NV_MASK: u32 = 1u32 << 3u32;
+
+    pub fn get_ph_enable_nv(&self) -> bool {
+        self.value & Self::PH_ENABLE_NV_MASK != 0
+    }
+
+    pub fn set_ph_enable_nv(&mut self, value: bool) {
+        if value {
+            self.value |= Self::PH_ENABLE_NV_MASK;
+        } else {
+            self.value &= !Self::PH_ENABLE_NV_MASK;
+        }
+    }
+
+    const READ_ONLY_MASK: u32 = 1u32 << 4u32;
+
+    pub fn get_read_only(&self) -> bool {
+        self.value & Self::READ_ONLY_MASK != 0
+    }
+
+    pub fn set_read_only(&mut self, value: bool) {
+        if value {
+            self.value |= Self::READ_ONLY_MASK;
+        } else {
+            self.value &= !Self::READ_ONLY_MASK;
+        }
+    }
+
+    const ORDERLY_MASK: u32 = 1u32 << 31u32;
+
+    pub fn get_orderly(&self) -> bool {
+        self.value & Self::ORDERLY_MASK != 0
+    }
+
+    pub fn set_orderly(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ORDERLY_MASK;
+        } else {
+            self.value &= !Self::ORDERLY_MASK;
+        }
+    }
+
+    const RESERVED_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 30u32 + 5u32) << 5u32;
+
+    pub const fn marshalled_size() -> u16 {
+        mem::size_of::<u32>() as u16
+    }
+
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+        marshal_u32(buf, self.value)
+    }
+
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+        let (buf, value) = unmarshal_u32(buf)?;
+        let result = Self::try_from(value)?;
+        Ok((buf, result))
+    }
+}
+
+impl convert::TryFrom<u32> for TpmaStartupClear {
+    type Error = TpmErr;
+
+    fn try_from(value: u32) -> Result<Self, TpmErr> {
+
+        if value & Self::RESERVED_MASK != 0 {
+            return Err(TpmErr::Rc(TpmRc::RESERVED_BITS));
+        }
+
+        Ok(Self { value })
+    }
+}
+
+// TCG TPM2 Library, Version 184, Part 2 -- Structures, page 112, table 44, TPMA_MEMORY bits
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TpmaMemory {
+    value: u32,
+}
+
+impl TpmaMemory {
+    pub fn new() -> Self {
+        Self { value: 0u32 }
+    }
+
+    const SHARED_RAM_MASK: u32 = 1u32 << 0u32;
+
+    pub fn get_shared_ram(&self) -> bool {
+        self.value & Self::SHARED_RAM_MASK != 0
+    }
+
+    pub fn set_shared_ram(&mut self, value: bool) {
+        if value {
+            self.value |= Self::SHARED_RAM_MASK;
+        } else {
+            self.value &= !Self::SHARED_RAM_MASK;
+        }
+    }
+
+    const SHARED_NV_MASK: u32 = 1u32 << 1u32;
+
+    pub fn get_shared_nv(&self) -> bool {
+        self.value & Self::SHARED_NV_MASK != 0
+    }
+
+    pub fn set_shared_nv(&mut self, value: bool) {
+        if value {
+            self.value |= Self::SHARED_NV_MASK;
+        } else {
+            self.value &= !Self::SHARED_NV_MASK;
+        }
+    }
+
+    const OBJECT_COPIED_TO_RAM_MASK: u32 = 1u32 << 2u32;
+
+    pub fn get_object_copied_to_ram(&self) -> bool {
+        self.value & Self::OBJECT_COPIED_TO_RAM_MASK != 0
+    }
+
+    pub fn set_object_copied_to_ram(&mut self, value: bool) {
+        if value {
+            self.value |= Self::OBJECT_COPIED_TO_RAM_MASK;
+        } else {
+            self.value &= !Self::OBJECT_COPIED_TO_RAM_MASK;
+        }
+    }
+
+    const RESERVED_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 31u32 + 3u32) << 3u32;
+
+    pub const fn marshalled_size() -> u16 {
+        mem::size_of::<u32>() as u16
+    }
+
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+        marshal_u32(buf, self.value)
+    }
+
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+        let (buf, value) = unmarshal_u32(buf)?;
+        let result = Self::try_from(value)?;
+        Ok((buf, result))
+    }
+}
+
+impl convert::TryFrom<u32> for TpmaMemory {
+    type Error = TpmErr;
+
+    fn try_from(value: u32) -> Result<Self, TpmErr> {
+
+        if value & Self::RESERVED_MASK != 0 {
+            return Err(TpmErr::Rc(TpmRc::RESERVED_BITS));
+        }
+
+        Ok(Self { value })
     }
 }
 
@@ -3344,15 +3832,15 @@ impl TpmaCc {
 
     const RESERVED_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 21u32 + 16u32) << 16u32;
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u32>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u32(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u32(buf)?;
         let result = Self::try_from(value)?;
         Ok((buf, result))
@@ -3360,6 +3848,256 @@ impl TpmaCc {
 }
 
 impl convert::TryFrom<u32> for TpmaCc {
+    type Error = TpmErr;
+
+    fn try_from(value: u32) -> Result<Self, TpmErr> {
+
+        if value & Self::RESERVED_MASK != 0 {
+            return Err(TpmErr::Rc(TpmRc::RESERVED_BITS));
+        }
+
+        Ok(Self { value })
+    }
+}
+
+// TCG TPM2 Library, Version 184, Part 2 -- Structures, page 115, table 46, TPMA_MODES bits
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TpmaModes {
+    value: u32,
+}
+
+impl TpmaModes {
+    pub fn new() -> Self {
+        Self { value: 0u32 }
+    }
+
+    const FIPS_140_2_MASK: u32 = 1u32 << 0u32;
+
+    pub fn get_fips_140_2(&self) -> bool {
+        self.value & Self::FIPS_140_2_MASK != 0
+    }
+
+    pub fn set_fips_140_2(&mut self, value: bool) {
+        if value {
+            self.value |= Self::FIPS_140_2_MASK;
+        } else {
+            self.value &= !Self::FIPS_140_2_MASK;
+        }
+    }
+
+    const FIPS_140_3_MASK: u32 = 1u32 << 1u32;
+
+    pub fn get_fips_140_3(&self) -> bool {
+        self.value & Self::FIPS_140_3_MASK != 0
+    }
+
+    pub fn set_fips_140_3(&mut self, value: bool) {
+        if value {
+            self.value |= Self::FIPS_140_3_MASK;
+        } else {
+            self.value &= !Self::FIPS_140_3_MASK;
+        }
+    }
+
+    const FIPS_140_3_INDICATOR_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 3u32 + 2u32) << 2u32;
+    const FIPS_140_3_INDICATOR_SHIFT: u32 = 2u32;
+
+    pub fn get_fips_140_3_indicator(&self) -> u32 {
+        (self.value & Self::FIPS_140_3_INDICATOR_MASK) >> Self::FIPS_140_3_INDICATOR_SHIFT
+    }
+
+    pub fn set_fips_140_3_indicator(&mut self, value: u32) {
+        let value = value << Self::FIPS_140_3_INDICATOR_SHIFT;
+        debug_assert!(value & !Self::FIPS_140_3_INDICATOR_MASK == 0, "invalid bitfield value");
+        self.value &= !Self::FIPS_140_3_INDICATOR_MASK;
+        self.value |= value;
+    }
+
+    const RESERVED_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 31u32 + 4u32) << 4u32;
+
+    pub const fn marshalled_size() -> u16 {
+        mem::size_of::<u32>() as u16
+    }
+
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+        marshal_u32(buf, self.value)
+    }
+
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+        let (buf, value) = unmarshal_u32(buf)?;
+        let result = Self::try_from(value)?;
+        Ok((buf, result))
+    }
+}
+
+impl convert::TryFrom<u32> for TpmaModes {
+    type Error = TpmErr;
+
+    fn try_from(value: u32) -> Result<Self, TpmErr> {
+
+        if value & Self::RESERVED_MASK != 0 {
+            return Err(TpmErr::Rc(TpmRc::RESERVED_BITS));
+        }
+
+        Ok(Self { value })
+    }
+}
+
+// TCG TPM2 Library, Version 184, Part 2 -- Structures, page 116, table 47, TPMA_X509_KEY_USAGE bits
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TpmaX509KeyUsage {
+    value: u32,
+}
+
+impl TpmaX509KeyUsage {
+    pub fn new() -> Self {
+        Self { value: 0u32 }
+    }
+
+    const DECIPHER_ONLY_MASK: u32 = 1u32 << 23u32;
+
+    pub fn get_decipher_only(&self) -> bool {
+        self.value & Self::DECIPHER_ONLY_MASK != 0
+    }
+
+    pub fn set_decipher_only(&mut self, value: bool) {
+        if value {
+            self.value |= Self::DECIPHER_ONLY_MASK;
+        } else {
+            self.value &= !Self::DECIPHER_ONLY_MASK;
+        }
+    }
+
+    const ENCIPHER_ONLY_MASK: u32 = 1u32 << 24u32;
+
+    pub fn get_encipher_only(&self) -> bool {
+        self.value & Self::ENCIPHER_ONLY_MASK != 0
+    }
+
+    pub fn set_encipher_only(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ENCIPHER_ONLY_MASK;
+        } else {
+            self.value &= !Self::ENCIPHER_ONLY_MASK;
+        }
+    }
+
+    const CRLS_IGN_MASK: u32 = 1u32 << 25u32;
+
+    pub fn get_crls_ign(&self) -> bool {
+        self.value & Self::CRLS_IGN_MASK != 0
+    }
+
+    pub fn set_crls_ign(&mut self, value: bool) {
+        if value {
+            self.value |= Self::CRLS_IGN_MASK;
+        } else {
+            self.value &= !Self::CRLS_IGN_MASK;
+        }
+    }
+
+    const CERT_SIGN_MASK: u32 = 1u32 << 26u32;
+
+    pub fn get_cert_sign(&self) -> bool {
+        self.value & Self::CERT_SIGN_MASK != 0
+    }
+
+    pub fn set_cert_sign(&mut self, value: bool) {
+        if value {
+            self.value |= Self::CERT_SIGN_MASK;
+        } else {
+            self.value &= !Self::CERT_SIGN_MASK;
+        }
+    }
+
+    const AGREEMENT_MASK: u32 = 1u32 << 27u32;
+
+    pub fn get_agreement(&self) -> bool {
+        self.value & Self::AGREEMENT_MASK != 0
+    }
+
+    pub fn set_agreement(&mut self, value: bool) {
+        if value {
+            self.value |= Self::AGREEMENT_MASK;
+        } else {
+            self.value &= !Self::AGREEMENT_MASK;
+        }
+    }
+
+    const DATA_ENCIPHERMENT_MASK: u32 = 1u32 << 28u32;
+
+    pub fn get_data_encipherment(&self) -> bool {
+        self.value & Self::DATA_ENCIPHERMENT_MASK != 0
+    }
+
+    pub fn set_data_encipherment(&mut self, value: bool) {
+        if value {
+            self.value |= Self::DATA_ENCIPHERMENT_MASK;
+        } else {
+            self.value &= !Self::DATA_ENCIPHERMENT_MASK;
+        }
+    }
+
+    const ENCIPHERMENT_MASK: u32 = 1u32 << 29u32;
+
+    pub fn get_encipherment(&self) -> bool {
+        self.value & Self::ENCIPHERMENT_MASK != 0
+    }
+
+    pub fn set_encipherment(&mut self, value: bool) {
+        if value {
+            self.value |= Self::ENCIPHERMENT_MASK;
+        } else {
+            self.value &= !Self::ENCIPHERMENT_MASK;
+        }
+    }
+
+    const NONREPUDIATION_CONTENT_COMMITMENT_MASK: u32 = 1u32 << 30u32;
+
+    pub fn get_nonrepudiation_content_commitment(&self) -> bool {
+        self.value & Self::NONREPUDIATION_CONTENT_COMMITMENT_MASK != 0
+    }
+
+    pub fn set_nonrepudiation_content_commitment(&mut self, value: bool) {
+        if value {
+            self.value |= Self::NONREPUDIATION_CONTENT_COMMITMENT_MASK;
+        } else {
+            self.value &= !Self::NONREPUDIATION_CONTENT_COMMITMENT_MASK;
+        }
+    }
+
+    const DIGITAL_SIGNATURE_MASK: u32 = 1u32 << 31u32;
+
+    pub fn get_digital_signature(&self) -> bool {
+        self.value & Self::DIGITAL_SIGNATURE_MASK != 0
+    }
+
+    pub fn set_digital_signature(&mut self, value: bool) {
+        if value {
+            self.value |= Self::DIGITAL_SIGNATURE_MASK;
+        } else {
+            self.value &= !Self::DIGITAL_SIGNATURE_MASK;
+        }
+    }
+
+    const RESERVED_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 22u32 + 0u32) << 0u32;
+
+    pub const fn marshalled_size() -> u16 {
+        mem::size_of::<u32>() as u16
+    }
+
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+        marshal_u32(buf, self.value)
+    }
+
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+        let (buf, value) = unmarshal_u32(buf)?;
+        let result = Self::try_from(value)?;
+        Ok((buf, result))
+    }
+}
+
+impl convert::TryFrom<u32> for TpmaX509KeyUsage {
     type Error = TpmErr;
 
     fn try_from(value: u32) -> Result<Self, TpmErr> {
@@ -3413,15 +4151,15 @@ impl TpmaAct {
 
     const RESERVED_MASK: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 31u32 + 2u32) << 2u32;
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u32>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u32(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u32(buf)?;
         let result = Self::try_from(value)?;
         Ok((buf, result))
@@ -34763,15 +35501,15 @@ impl TpmaNv {
     const RESERVED_MASK1: u32 = 0xffffffffu32 >> (32u32 - 1u32 - 24u32 + 20u32) << 20u32;
     const RESERVED_MASK: u32 = Self::RESERVED_MASK0 | Self::RESERVED_MASK1;
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u32>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u32(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u32(buf)?;
         let result = Self::try_from(value)?;
         Ok((buf, result))
@@ -35157,15 +35895,15 @@ impl TpmaNvExp {
     const RESERVED_MASK2: u64 = 0xffffffffffffffffu64 >> (64u32 - 1u32 - 63u32 + 35u32) << 35u32;
     const RESERVED_MASK: u64 = Self::RESERVED_MASK0 | Self::RESERVED_MASK1 | Self::RESERVED_MASK2;
 
-    const fn marshalled_size() -> u16 {
+    pub const fn marshalled_size() -> u16 {
         mem::size_of::<u64>() as u16
     }
 
-    fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
+    pub fn marshal<'a>(&self, buf: &'a mut [u8]) -> Result<&'a mut [u8], TpmErr> {
         marshal_u64(buf, self.value)
     }
 
-    fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
+    pub fn unmarshal(buf: &[u8]) -> Result<(&[u8], Self), TpmErr> {
         let (buf, value) = unmarshal_u64(buf)?;
         let result = Self::try_from(value)?;
         Ok((buf, result))
