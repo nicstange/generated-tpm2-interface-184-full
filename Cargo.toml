@@ -1,0 +1,107 @@
+[package]
+name = "generated-tpm2-interface-184-full"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = [
+    "sha1", "sha256", "sha384", "sha512",
+    "sha3_256", "sha3_384", "sha3_512",
+    "sm3_256",
+    "aes", "camellia", "sm4", "tdes",
+    "cbc", "cfb", "ctr", "ecb", "ofb", "gcm", "ccm", "kw", "kwp",
+    "hmac",
+    "mgf1", "kdf1_sp800_56a", "kdf1_sp800_108", "kdf2",
+    "rsa", "oaep", "rsapss", "rsaes", "rsassa",
+    "rsa1024", "rsa2048", "rsa3072", "rsa4096", "rsa8192", "rsa16384",
+    "ecc", "ecdh", "ecmqv", "ecdsa", "ecschnorr", "ecdaa", "eddsa", "eddsa_ph", "sm2",
+    "ecc_nist_p192", "ecc_nist_p224", "ecc_nist_p256", "ecc_nist_p384", "ecc_nist_p521",
+    "ecc_bn_p256", "ecc_bn_p638", "ecc_bp_p256_r1", "ecc_bp_p384_r1", "ecc_bp_p512_r1",
+    "ecc_curve_448", "ecc_curve_25519",
+    "ecc_sm2_p256",
+   "zeroize",
+]
+
+zeroize = ["dep:zeroize"]
+
+# Hashes
+sha1 = []
+sha256 = []
+sha384 = []
+sha512 = []
+sha3_256 = []
+sha3_384 = []
+sha3_512 = []
+sm3_256 = []
+
+# Block ciphers
+aes = []
+camellia = []
+sm4 = []
+tdes = []
+
+# Block cipher modes
+cbc = []
+cfb = []
+ctr = []
+ecb = []
+ofb = []
+
+gcm = []
+ccm = []
+eax = []
+
+kw = []
+kwp = []
+
+# MACs
+cmac = []
+hmac = []
+
+# KDFs
+mgf1 = []
+kdf1_sp800_56a = []
+kdf1_sp800_108 = []
+kdf2 = []
+
+# RSA
+rsa = []
+oaep = ["rsa", "mgf1"]
+rsapss = ["rsa", "mgf1"]
+rsaes = ["rsa"]
+rsassa = ["rsa"]
+
+rsa1024 = []
+rsa2048 = []
+rsa3072 = []
+rsa4096 = []
+rsa8192 = []
+rsa16384 = []
+
+# ECC
+ecc = []
+ecdh = ["ecc"]
+ecmqv = ["ecc"]
+ecdsa = ["ecc"]
+ecschnorr = ["ecc"]
+ecdaa = ["ecc"]
+eddsa = ["ecc"]
+eddsa_ph = ["ecc"]
+sm2 = ["ecc", "ecc_sm2_p256"]
+ecc_nist_p192 = ["ecc"]
+ecc_nist_p224 = ["ecc"]
+ecc_nist_p256 = ["ecc"]
+ecc_nist_p384 = ["ecc"]
+ecc_nist_p521 = ["ecc"]
+ecc_bn_p256 = ["ecc"]
+ecc_bn_p638 = ["ecc"]
+ecc_bp_p256_r1 = ["ecc"]
+ecc_bp_p384_r1 = ["ecc"]
+ecc_bp_p512_r1 = ["ecc"]
+ecc_curve_448 = ["ecc"]
+ecc_curve_25519 = ["ecc"]
+ecc_sm2_p256 = ["ecc"]
+
+
+[dependencies]
+zeroize = { version = "1.8.1", optional = true, default-features = false, features= ["alloc"] }
