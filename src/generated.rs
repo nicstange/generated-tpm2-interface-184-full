@@ -63701,3 +63701,3529 @@ const fn tpm2_vendor_tcg_test_response_params_marshalled_max_size() -> u16 {
 
     size
 }
+
+macro_rules! with_tpm_commands {
+    ( $m:ident, $cp_lifetime:lifetime, $rp_lifetime:lifetime ) => {
+        $m![
+            {
+                command_code: TpmCc::Startup,
+                name_in_camelcase: Tpm2Startup,
+                name_in_snakecase: tpm2_startup,
+                nv: true,
+                command_params: {
+                    type: Tpm2StartupCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Shutdown,
+                name_in_camelcase: Tpm2Shutdown,
+                name_in_snakecase: tpm2_shutdown,
+                nv: true,
+                command_params: {
+                    type: Tpm2ShutdownCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::SelfTest,
+                name_in_camelcase: Tpm2SelfTest,
+                name_in_snakecase: tpm2_self_test,
+                nv: true,
+                command_params: {
+                    type: Tpm2SelfTestCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::IncrementalSelfTest,
+                name_in_camelcase: Tpm2IncrementalSelfTest,
+                name_in_snakecase: tpm2_incremental_self_test,
+                nv: true,
+                command_params: {
+                    type: Tpm2IncrementalSelfTestCommandParams,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2IncrementalSelfTestResponseParams,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::GetTestResult,
+                name_in_camelcase: Tpm2GetTestResult,
+                name_in_snakecase: tpm2_get_test_result,
+                response_params: {
+                    type: Tpm2GetTestResultResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::StartAuthSession,
+                name_in_camelcase: Tpm2StartAuthSession,
+                name_in_snakecase: tpm2_start_auth_session,
+                command_handles: {
+                    type: Tpm2StartAuthSessionCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: tpm_key, type: TpmiDhObjectWCV, },
+                        { name: bind, type: TpmiDhEntityWCV, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2StartAuthSessionCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2StartAuthSessionResponseHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: session_handle, type: TpmiShAuthSession, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2StartAuthSessionResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyRestart,
+                name_in_camelcase: Tpm2PolicyRestart,
+                name_in_snakecase: tpm2_policy_restart,
+                command_handles: {
+                    type: Tpm2PolicyRestartCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: session_handle, type: TpmiShPolicy, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::Create,
+                name_in_camelcase: Tpm2Create,
+                name_in_snakecase: tpm2_create,
+                command_handles: {
+                    type: Tpm2CreateCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: parent_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2CreateCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2CreateResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Load,
+                name_in_camelcase: Tpm2Load,
+                name_in_snakecase: tpm2_load,
+                command_handles: {
+                    type: Tpm2LoadCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: parent_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2LoadCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2LoadResponseHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: object_handle, type: u32, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2LoadResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::LoadExternal,
+                name_in_camelcase: Tpm2LoadExternal,
+                name_in_snakecase: tpm2_load_external,
+                command_params: {
+                    type: Tpm2LoadExternalCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2LoadExternalResponseHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: object_handle, type: u32, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2LoadExternalResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ReadPublic,
+                name_in_camelcase: Tpm2ReadPublic,
+                name_in_snakecase: tpm2_read_public,
+                command_handles: {
+                    type: Tpm2ReadPublicCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: object_handle, type: TpmiDhObject, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2ReadPublicResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ActivateCredential,
+                name_in_camelcase: Tpm2ActivateCredential,
+                name_in_snakecase: tpm2_activate_credential,
+                command_handles: {
+                    type: Tpm2ActivateCredentialCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: activate_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: Admin, },
+                        },
+                        {
+                            name: key_handle, type: TpmiDhObject,
+                            auth: { index: 2, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ActivateCredentialCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2ActivateCredentialResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::MakeCredential,
+                name_in_camelcase: Tpm2MakeCredential,
+                name_in_snakecase: tpm2_make_credential,
+                command_handles: {
+                    type: Tpm2MakeCredentialCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2MakeCredentialCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2MakeCredentialResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Unseal,
+                name_in_camelcase: Tpm2Unseal,
+                name_in_snakecase: tpm2_unseal,
+                command_handles: {
+                    type: Tpm2UnsealCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: item_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                response_params: {
+                    type: Tpm2UnsealResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ObjectChangeAuth,
+                name_in_camelcase: Tpm2ObjectChangeAuth,
+                name_in_snakecase: tpm2_object_change_auth,
+                command_handles: {
+                    type: Tpm2ObjectChangeAuthCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: object_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: Admin, },
+                        },
+                        { name: parent_handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ObjectChangeAuthCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2ObjectChangeAuthResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::CreateLoaded,
+                name_in_camelcase: Tpm2CreateLoaded,
+                name_in_snakecase: tpm2_create_loaded,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2CreateLoadedCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: parent_handle, type: TpmiDhParent,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2CreateLoadedCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2CreateLoadedResponseHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: object_handle, type: u32, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2CreateLoadedResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Duplicate,
+                name_in_camelcase: Tpm2Duplicate,
+                name_in_snakecase: tpm2_duplicate,
+                command_handles: {
+                    type: Tpm2DuplicateCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: object_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: Dup, },
+                        },
+                        { name: new_parent_handle, type: TpmiDhObjectWCV, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2DuplicateCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2DuplicateResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Rewrap,
+                name_in_camelcase: Tpm2Rewrap,
+                name_in_snakecase: tpm2_rewrap,
+                command_handles: {
+                    type: Tpm2RewrapCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: old_parent, type: TpmiDhObjectWCV,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: new_parent, type: TpmiDhObjectWCV, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2RewrapCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2RewrapResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Import,
+                name_in_camelcase: Tpm2Import,
+                name_in_snakecase: tpm2_import,
+                command_handles: {
+                    type: Tpm2ImportCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: parent_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ImportCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2ImportResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::RsaEncrypt,
+                name_in_camelcase: Tpm2RsaEncrypt,
+                name_in_snakecase: tpm2_rsa_encrypt,
+                cfg: feature = "rsa",
+                command_handles: {
+                    type: Tpm2RsaEncryptCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: key_handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2RsaEncryptCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2RsaEncryptResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::RsaDecrypt,
+                name_in_camelcase: Tpm2RsaDecrypt,
+                name_in_snakecase: tpm2_rsa_decrypt,
+                cfg: feature = "rsa",
+                command_handles: {
+                    type: Tpm2RsaDecryptCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: key_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2RsaDecryptCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2RsaDecryptResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EcdhKeyGen,
+                name_in_camelcase: Tpm2EcdhKeyGen,
+                name_in_snakecase: tpm2_ecdh_key_gen,
+                cfg: feature = "ecc",
+                command_handles: {
+                    type: Tpm2EcdhKeyGenCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: key_handle, type: TpmiDhObject, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2EcdhKeyGenResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EcdhZGen,
+                name_in_camelcase: Tpm2EcdhZGen,
+                name_in_snakecase: tpm2_ecdh_zg_en,
+                cfg: feature = "ecc",
+                command_handles: {
+                    type: Tpm2EcdhZGenCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: key_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2EcdhZGenCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EcdhZGenResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EccParameters,
+                name_in_camelcase: Tpm2EccParameters,
+                name_in_snakecase: tpm2_ecc_parameters,
+                cfg: feature = "ecc",
+                command_params: {
+                    type: Tpm2EccParametersCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EccParametersResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ZGen2Phase,
+                name_in_camelcase: Tpm2ZGen2Phase,
+                name_in_snakecase: tpm2_zg_en_2_phase,
+                cfg: feature = "ecc",
+                command_handles: {
+                    type: Tpm2ZGen2PhaseCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: key_a, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ZGen2PhaseCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2ZGen2PhaseResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EccEncrypt,
+                name_in_camelcase: Tpm2EccEncrypt,
+                name_in_snakecase: tpm2_ecc_encrypt,
+                cfg: feature = "ecc",
+                command_handles: {
+                    type: Tpm2EccEncryptCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: key_handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2EccEncryptCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EccEncryptResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EccDecrypt,
+                name_in_camelcase: Tpm2EccDecrypt,
+                name_in_snakecase: tpm2_ecc_decrypt,
+                cfg: feature = "ecc",
+                command_handles: {
+                    type: Tpm2EccDecryptCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: key_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2EccDecryptCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EccDecryptResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EncryptDecrypt,
+                name_in_camelcase: Tpm2EncryptDecrypt,
+                name_in_snakecase: tpm2_encrypt_decrypt,
+                command_handles: {
+                    type: Tpm2EncryptDecryptCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: key_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2EncryptDecryptCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EncryptDecryptResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EncryptDecrypt2,
+                name_in_camelcase: Tpm2EncryptDecrypt2,
+                name_in_snakecase: tpm2_encrypt_decrypt2,
+                command_handles: {
+                    type: Tpm2EncryptDecrypt2CommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: key_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2EncryptDecrypt2CommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EncryptDecrypt2ResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Hash,
+                name_in_camelcase: Tpm2Hash,
+                name_in_snakecase: tpm2_hash,
+                command_params: {
+                    type: Tpm2HashCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2HashResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Hmac,
+                name_in_camelcase: Tpm2Hmac,
+                name_in_snakecase: tpm2_hmac,
+                cfg: not(feature = "cmac"),
+                command_handles: {
+                    type: Tpm2HmacCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2HmacCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2HmacResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Mac,
+                name_in_camelcase: Tpm2Mac,
+                name_in_snakecase: tpm2_mac,
+                cfg: feature = "cmac",
+                command_handles: {
+                    type: Tpm2MacCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2MacCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2MacResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::GetRandom,
+                name_in_camelcase: Tpm2GetRandom,
+                name_in_snakecase: tpm2_get_random,
+                command_params: {
+                    type: Tpm2GetRandomCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2GetRandomResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::StirRandom,
+                name_in_camelcase: Tpm2StirRandom,
+                name_in_snakecase: tpm2_stir_random,
+                nv: true,
+                command_params: {
+                    type: Tpm2StirRandomCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::HmacStart,
+                name_in_camelcase: Tpm2HmacStart,
+                name_in_snakecase: tpm2_hmac_start,
+                cfg: not(feature = "cmac"),
+                command_handles: {
+                    type: Tpm2HmacStartCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2HmacStartCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2HmacStartResponseHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: sequence_handle, type: TpmiDhObject, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::MacStart,
+                name_in_camelcase: Tpm2MacStart,
+                name_in_snakecase: tpm2_mac_start,
+                cfg: feature = "cmac",
+                command_handles: {
+                    type: Tpm2MacStartCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2MacStartCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2MacStartResponseHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: sequence_handle, type: TpmiDhObject, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::HashSequenceStart,
+                name_in_camelcase: Tpm2HashSequenceStart,
+                name_in_snakecase: tpm2_hash_sequence_start,
+                command_params: {
+                    type: Tpm2HashSequenceStartCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2HashSequenceStartResponseHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: sequence_handle, type: TpmiDhObject, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::SequenceUpdate,
+                name_in_camelcase: Tpm2SequenceUpdate,
+                name_in_snakecase: tpm2_sequence_update,
+                command_handles: {
+                    type: Tpm2SequenceUpdateCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: sequence_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2SequenceUpdateCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::SequenceComplete,
+                name_in_camelcase: Tpm2SequenceComplete,
+                name_in_snakecase: tpm2_sequence_complete,
+                flushing: Used,
+                command_handles: {
+                    type: Tpm2SequenceCompleteCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: sequence_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2SequenceCompleteCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2SequenceCompleteResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EventSequenceComplete,
+                name_in_camelcase: Tpm2EventSequenceComplete,
+                name_in_snakecase: tpm2_event_sequence_complete,
+                nv: true,
+                flushing: Used,
+                command_handles: {
+                    type: Tpm2EventSequenceCompleteCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: pcr_handle, type: TpmiDhPcrWCV,
+                            auth: { index: 1, role: User, },
+                        },
+                        {
+                            name: sequence_handle, type: TpmiDhObject,
+                            auth: { index: 2, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2EventSequenceCompleteCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EventSequenceCompleteResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Certify,
+                name_in_camelcase: Tpm2Certify,
+                name_in_snakecase: tpm2_certify,
+                command_handles: {
+                    type: Tpm2CertifyCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: object_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: Admin, },
+                        },
+                        {
+                            name: sign_handle, type: TpmiDhObjectWCV,
+                            auth: { index: 2, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2CertifyCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2CertifyResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::CertifyCreation,
+                name_in_camelcase: Tpm2CertifyCreation,
+                name_in_snakecase: tpm2_certify_creation,
+                command_handles: {
+                    type: Tpm2CertifyCreationCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: sign_handle, type: TpmiDhObjectWCV,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: object_handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2CertifyCreationCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2CertifyCreationResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Quote,
+                name_in_camelcase: Tpm2Quote,
+                name_in_snakecase: tpm2_quote,
+                command_handles: {
+                    type: Tpm2QuoteCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: sign_handle, type: TpmiDhObjectWCV,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2QuoteCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2QuoteResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::GetSessionAuditDigest,
+                name_in_camelcase: Tpm2GetSessionAuditDigest,
+                name_in_snakecase: tpm2_get_session_audit_digest,
+                command_handles: {
+                    type: Tpm2GetSessionAuditDigestCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: privacy_admin_handle, type: TpmiRhEndorsement,
+                            auth: { index: 1, role: User, },
+                        },
+                        {
+                            name: sign_handle, type: TpmiDhObjectWCV,
+                            auth: { index: 2, role: User, },
+                        },
+                        { name: session_handle, type: TpmiShHmac, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2GetSessionAuditDigestCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2GetSessionAuditDigestResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::GetCommandAuditDigest,
+                name_in_camelcase: Tpm2GetCommandAuditDigest,
+                name_in_snakecase: tpm2_get_command_audit_digest,
+                nv: true,
+                command_handles: {
+                    type: Tpm2GetCommandAuditDigestCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: privacy_handle, type: TpmiRhEndorsement,
+                            auth: { index: 1, role: User, },
+                        },
+                        {
+                            name: sign_handle, type: TpmiDhObjectWCV,
+                            auth: { index: 2, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2GetCommandAuditDigestCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2GetCommandAuditDigestResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::GetTime,
+                name_in_camelcase: Tpm2GetTime,
+                name_in_snakecase: tpm2_get_time,
+                command_handles: {
+                    type: Tpm2GetTimeCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: privacy_admin_handle, type: TpmiRhEndorsement,
+                            auth: { index: 1, role: User, },
+                        },
+                        {
+                            name: sign_handle, type: TpmiDhObjectWCV,
+                            auth: { index: 2, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2GetTimeCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2GetTimeResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::CertifyX509,
+                name_in_camelcase: Tpm2CertifyX509,
+                name_in_snakecase: tpm2_certify_x509,
+                command_handles: {
+                    type: Tpm2CertifyX509CommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: object_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: Admin, },
+                        },
+                        {
+                            name: sign_handle, type: TpmiDhObject,
+                            auth: { index: 2, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2CertifyX509CommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2CertifyX509ResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Commit,
+                name_in_camelcase: Tpm2Commit,
+                name_in_snakecase: tpm2_commit,
+                cfg: feature = "ecc",
+                command_handles: {
+                    type: Tpm2CommitCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: sign_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2CommitCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2CommitResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EcEphemeral,
+                name_in_camelcase: Tpm2EcEphemeral,
+                name_in_snakecase: tpm2_ec_ephemeral,
+                cfg: feature = "ecc",
+                command_params: {
+                    type: Tpm2EcEphemeralCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2EcEphemeralResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::VerifySignature,
+                name_in_camelcase: Tpm2VerifySignature,
+                name_in_snakecase: tpm2_verify_signature,
+                command_handles: {
+                    type: Tpm2VerifySignatureCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: key_handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2VerifySignatureCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2VerifySignatureResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::Sign,
+                name_in_camelcase: Tpm2Sign,
+                name_in_snakecase: tpm2_sign,
+                command_handles: {
+                    type: Tpm2SignCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: key_handle, type: TpmiDhObject,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2SignCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2SignResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::SetCommandCodeAuditStatus,
+                name_in_camelcase: Tpm2SetCommandCodeAuditStatus,
+                name_in_snakecase: tpm2_set_command_code_audit_status,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2SetCommandCodeAuditStatusCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2SetCommandCodeAuditStatusCommandParams,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PcrExtend,
+                name_in_camelcase: Tpm2PcrExtend,
+                name_in_snakecase: tpm2_pcr_extend,
+                nv: true,
+                command_handles: {
+                    type: Tpm2PcrExtendCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: pcr_handle, type: TpmiDhPcrWCV,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PcrExtendCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PcrEvent,
+                name_in_camelcase: Tpm2PcrEvent,
+                name_in_snakecase: tpm2_pcr_event,
+                nv: true,
+                command_handles: {
+                    type: Tpm2PcrEventCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: pcr_handle, type: TpmiDhPcrWCV,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PcrEventCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2PcrEventResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PcrRead,
+                name_in_camelcase: Tpm2PcrRead,
+                name_in_snakecase: tpm2_pcr_read,
+                command_params: {
+                    type: Tpm2PcrReadCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2PcrReadResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PcrAllocate,
+                name_in_camelcase: Tpm2PcrAllocate,
+                name_in_snakecase: tpm2_pcr_allocate,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2PcrAllocateCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhPlatform,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PcrAllocateCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2PcrAllocateResponseParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PcrSetAuthPolicy,
+                name_in_camelcase: Tpm2PcrSetAuthPolicy,
+                name_in_snakecase: tpm2_pcr_set_auth_policy,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2PcrSetAuthPolicyCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhPlatform,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PcrSetAuthPolicyCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PcrSetAuthValue,
+                name_in_camelcase: Tpm2PcrSetAuthValue,
+                name_in_snakecase: tpm2_pcr_set_auth_value,
+                command_handles: {
+                    type: Tpm2PcrSetAuthValueCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: pcr_handle, type: TpmiDhPcr,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PcrSetAuthValueCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PcrReset,
+                name_in_camelcase: Tpm2PcrReset,
+                name_in_snakecase: tpm2_pcr_reset,
+                nv: true,
+                command_handles: {
+                    type: Tpm2PcrResetCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: pcr_handle, type: TpmiDhPcr,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::PolicySigned,
+                name_in_camelcase: Tpm2PolicySigned,
+                name_in_snakecase: tpm2_policy_signed,
+                command_handles: {
+                    type: Tpm2PolicySignedCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: auth_object, type: TpmiDhObject, },
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicySignedCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2PolicySignedResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicySecret,
+                name_in_camelcase: Tpm2PolicySecret,
+                name_in_snakecase: tpm2_policy_secret,
+                command_handles: {
+                    type: Tpm2PolicySecretCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiDhEntity,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicySecretCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2PolicySecretResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyTicket,
+                name_in_camelcase: Tpm2PolicyTicket,
+                name_in_snakecase: tpm2_policy_ticket,
+                command_handles: {
+                    type: Tpm2PolicyTicketCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyTicketCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyOR,
+                name_in_camelcase: Tpm2PolicyOR,
+                name_in_snakecase: tpm2_policy_or,
+                command_handles: {
+                    type: Tpm2PolicyORCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyORCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyPCR,
+                name_in_camelcase: Tpm2PolicyPCR,
+                name_in_snakecase: tpm2_policy_pcr,
+                command_handles: {
+                    type: Tpm2PolicyPCRCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyPCRCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyLocality,
+                name_in_camelcase: Tpm2PolicyLocality,
+                name_in_snakecase: tpm2_policy_locality,
+                command_handles: {
+                    type: Tpm2PolicyLocalityCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyLocalityCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyNV,
+                name_in_camelcase: Tpm2PolicyNV,
+                name_in_snakecase: tpm2_policy_nv,
+                command_handles: {
+                    type: Tpm2PolicyNVCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, },
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyNVCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyCounterTimer,
+                name_in_camelcase: Tpm2PolicyCounterTimer,
+                name_in_snakecase: tpm2_policy_counter_timer,
+                command_handles: {
+                    type: Tpm2PolicyCounterTimerCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyCounterTimerCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyCommandCode,
+                name_in_camelcase: Tpm2PolicyCommandCode,
+                name_in_snakecase: tpm2_policy_command_code,
+                command_handles: {
+                    type: Tpm2PolicyCommandCodeCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyCommandCodeCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyPhysicalPresence,
+                name_in_camelcase: Tpm2PolicyPhysicalPresence,
+                name_in_snakecase: tpm2_policy_physical_presence,
+                command_handles: {
+                    type: Tpm2PolicyPhysicalPresenceCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::PolicyCpHash,
+                name_in_camelcase: Tpm2PolicyCpHash,
+                name_in_snakecase: tpm2_policy_cp_hash,
+                command_handles: {
+                    type: Tpm2PolicyCpHashCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyCpHashCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyNameHash,
+                name_in_camelcase: Tpm2PolicyNameHash,
+                name_in_snakecase: tpm2_policy_name_hash,
+                command_handles: {
+                    type: Tpm2PolicyNameHashCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyNameHashCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyDuplicationSelect,
+                name_in_camelcase: Tpm2PolicyDuplicationSelect,
+                name_in_snakecase: tpm2_policy_duplication_select,
+                command_handles: {
+                    type: Tpm2PolicyDuplicationSelectCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyDuplicationSelectCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyAuthorize,
+                name_in_camelcase: Tpm2PolicyAuthorize,
+                name_in_snakecase: tpm2_policy_authorize,
+                command_handles: {
+                    type: Tpm2PolicyAuthorizeCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyAuthorizeCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyAuthValue,
+                name_in_camelcase: Tpm2PolicyAuthValue,
+                name_in_snakecase: tpm2_policy_auth_value,
+                command_handles: {
+                    type: Tpm2PolicyAuthValueCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::PolicyPassword,
+                name_in_camelcase: Tpm2PolicyPassword,
+                name_in_snakecase: tpm2_policy_password,
+                command_handles: {
+                    type: Tpm2PolicyPasswordCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::PolicyGetDigest,
+                name_in_camelcase: Tpm2PolicyGetDigest,
+                name_in_snakecase: tpm2_policy_get_digest,
+                command_handles: {
+                    type: Tpm2PolicyGetDigestCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2PolicyGetDigestResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyNvWritten,
+                name_in_camelcase: Tpm2PolicyNvWritten,
+                name_in_snakecase: tpm2_policy_nv_written,
+                command_handles: {
+                    type: Tpm2PolicyNvWrittenCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyNvWrittenCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyTemplate,
+                name_in_camelcase: Tpm2PolicyTemplate,
+                name_in_snakecase: tpm2_policy_template,
+                command_handles: {
+                    type: Tpm2PolicyTemplateCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyTemplateCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyAuthorizeNV,
+                name_in_camelcase: Tpm2PolicyAuthorizeNV,
+                name_in_snakecase: tpm2_policy_authorize_nv,
+                command_handles: {
+                    type: Tpm2PolicyAuthorizeNVCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, },
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::PolicyCapability,
+                name_in_camelcase: Tpm2PolicyCapability,
+                name_in_snakecase: tpm2_policy_capability,
+                command_handles: {
+                    type: Tpm2PolicyCapabilityCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyCapabilityCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyParameters,
+                name_in_camelcase: Tpm2PolicyParameters,
+                name_in_snakecase: tpm2_policy_parameters,
+                command_handles: {
+                    type: Tpm2PolicyParametersCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyParametersCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyTransportSPDM,
+                name_in_camelcase: Tpm2PolicyTransportSPDM,
+                name_in_snakecase: tpm2_policy_transport_spdm,
+                command_handles: {
+                    type: Tpm2PolicyTransportSPDMCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyTransportSPDMCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::CreatePrimary,
+                name_in_camelcase: Tpm2CreatePrimary,
+                name_in_snakecase: tpm2_create_primary,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2CreatePrimaryCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: primary_handle, type: TpmiRhHierarchy,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2CreatePrimaryCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2CreatePrimaryResponseHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: object_handle, type: u32, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2CreatePrimaryResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::HierarchyControl,
+                name_in_camelcase: Tpm2HierarchyControl,
+                name_in_snakecase: tpm2_hierarchy_control,
+                nv: true,
+                flushing: Extensive,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2HierarchyControlCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhBaseHierarchy,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2HierarchyControlCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::SetPrimaryPolicy,
+                name_in_camelcase: Tpm2SetPrimaryPolicy,
+                name_in_snakecase: tpm2_set_primary_policy,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2SetPrimaryPolicyCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhHierarchyPolicy,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2SetPrimaryPolicyCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ChangePPS,
+                name_in_camelcase: Tpm2ChangePPS,
+                name_in_snakecase: tpm2_change_pps,
+                nv: true,
+                flushing: Extensive,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2ChangePPSCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhPlatform,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::ChangeEPS,
+                name_in_camelcase: Tpm2ChangeEPS,
+                name_in_snakecase: tpm2_change_eps,
+                nv: true,
+                flushing: Extensive,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2ChangeEPSCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhPlatform,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::Clear,
+                name_in_camelcase: Tpm2Clear,
+                name_in_snakecase: tpm2_clear,
+                nv: true,
+                flushing: Extensive,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2ClearCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhClear,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::ClearControl,
+                name_in_camelcase: Tpm2ClearControl,
+                name_in_snakecase: tpm2_clear_control,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2ClearControlCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth, type: TpmiRhClear,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ClearControlCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::HierarchyChangeAuth,
+                name_in_camelcase: Tpm2HierarchyChangeAuth,
+                name_in_snakecase: tpm2_hierarchy_change_auth,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2HierarchyChangeAuthCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhHierarchyAuth,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2HierarchyChangeAuthCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ReadOnlyControl,
+                name_in_camelcase: Tpm2ReadOnlyControl,
+                name_in_snakecase: tpm2_read_only_control,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2ReadOnlyControlCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhPlatform,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ReadOnlyControlCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::DictionaryAttackLockReset,
+                name_in_camelcase: Tpm2DictionaryAttackLockReset,
+                name_in_snakecase: tpm2_dictionary_attack_lock_reset,
+                nv: true,
+                command_handles: {
+                    type: Tpm2DictionaryAttackLockResetCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: lock_handle, type: TpmiRhLockout,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::DictionaryAttackParameters,
+                name_in_camelcase: Tpm2DictionaryAttackParameters,
+                name_in_snakecase: tpm2_dictionary_attack_parameters,
+                nv: true,
+                command_handles: {
+                    type: Tpm2DictionaryAttackParametersCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: lock_handle, type: TpmiRhLockout,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2DictionaryAttackParametersCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PpCommands,
+                name_in_camelcase: Tpm2PpCommands,
+                name_in_snakecase: tpm2_pp_commands,
+                nv: true,
+                platform_auth_pp: IsRequired,
+                command_handles: {
+                    type: Tpm2PpCommandsCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth, type: TpmiRhPlatform,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PpCommandsCommandParams,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::SetAlgorithmSet,
+                name_in_camelcase: Tpm2SetAlgorithmSet,
+                name_in_snakecase: tpm2_set_algorithm_set,
+                nv: true,
+                command_handles: {
+                    type: Tpm2SetAlgorithmSetCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhPlatform,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2SetAlgorithmSetCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::FieldUpgradeStart,
+                name_in_camelcase: Tpm2FieldUpgradeStart,
+                name_in_snakecase: tpm2_field_upgrade_start,
+                command_handles: {
+                    type: Tpm2FieldUpgradeStartCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: authorization, type: TpmiRhPlatform,
+                            auth: { index: 1, role: Admin, },
+                        },
+                        { name: key_handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2FieldUpgradeStartCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::FieldUpgradeData,
+                name_in_camelcase: Tpm2FieldUpgradeData,
+                name_in_snakecase: tpm2_field_upgrade_data,
+                nv: true,
+                command_params: {
+                    type: Tpm2FieldUpgradeDataCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2FieldUpgradeDataResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::FirmwareRead,
+                name_in_camelcase: Tpm2FirmwareRead,
+                name_in_snakecase: tpm2_firmware_read,
+                command_params: {
+                    type: Tpm2FirmwareReadCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2FirmwareReadResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ContextSave,
+                name_in_camelcase: Tpm2ContextSave,
+                name_in_snakecase: tpm2_context_save,
+                command_handles: {
+                    type: Tpm2ContextSaveCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: save_handle, type: TpmiDhContext, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2ContextSaveResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ContextLoad,
+                name_in_camelcase: Tpm2ContextLoad,
+                name_in_snakecase: tpm2_context_load,
+                command_params: {
+                    type: Tpm2ContextLoadCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_handles: {
+                    type: Tpm2ContextLoadResponseHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: loaded_handle, type: TpmiDhContext, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::FlushContext,
+                name_in_camelcase: Tpm2FlushContext,
+                name_in_snakecase: tpm2_flush_context,
+                command_params: {
+                    type: Tpm2FlushContextCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::EvictControl,
+                name_in_camelcase: Tpm2EvictControl,
+                name_in_snakecase: tpm2_evict_control,
+                nv: true,
+                command_handles: {
+                    type: Tpm2EvictControlCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: object_handle, type: TpmiDhObject, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2EvictControlCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ReadClock,
+                name_in_camelcase: Tpm2ReadClock,
+                name_in_snakecase: tpm2_read_clock,
+                response_params: {
+                    type: Tpm2ReadClockResponseParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ClockSet,
+                name_in_camelcase: Tpm2ClockSet,
+                name_in_snakecase: tpm2_clock_set,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2ClockSetCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ClockSetCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ClockRateAdjust,
+                name_in_camelcase: Tpm2ClockRateAdjust,
+                name_in_snakecase: tpm2_clock_rate_adjust,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2ClockRateAdjustCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ClockRateAdjustCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::GetCapability,
+                name_in_camelcase: Tpm2GetCapability,
+                name_in_snakecase: tpm2_get_capability,
+                command_params: {
+                    type: Tpm2GetCapabilityCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2GetCapabilityResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::TestParms,
+                name_in_camelcase: Tpm2TestParms,
+                name_in_snakecase: tpm2_test_parms,
+                command_params: {
+                    type: Tpm2TestParmsCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::SetCapability,
+                name_in_camelcase: Tpm2SetCapability,
+                name_in_snakecase: tpm2_set_capability,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2SetCapabilityCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhHierarchyAuthWCV,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2SetCapabilityCommandParams,
+                    can_crypt: true,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvDefineSpace,
+                name_in_camelcase: Tpm2NvDefineSpace,
+                name_in_snakecase: tpm2_nv_define_space,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2NvDefineSpaceCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvDefineSpaceCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvUndefineSpace,
+                name_in_camelcase: Tpm2NvUndefineSpace,
+                name_in_snakecase: tpm2_nv_undefine_space,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvUndefineSpaceCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvDefinedIndex, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::NvUndefineSpaceSpecial,
+                name_in_camelcase: Tpm2NvUndefineSpaceSpecial,
+                name_in_snakecase: tpm2_nv_undefine_space_special,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2NvUndefineSpaceSpecialCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: nv_index, type: TpmiRhNvDefinedIndex,
+                            auth: { index: 1, role: Admin, },
+                        },
+                        {
+                            name: platform, type: TpmiRhPlatform,
+                            auth: { index: 2, role: User, },
+                        }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::NvReadPublic,
+                name_in_camelcase: Tpm2NvReadPublic,
+                name_in_snakecase: tpm2_nv_read_public,
+                command_handles: {
+                    type: Tpm2NvReadPublicCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2NvReadPublicResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvWrite,
+                name_in_camelcase: Tpm2NvWrite,
+                name_in_snakecase: tpm2_nv_write,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvWriteCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvWriteCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvIncrement,
+                name_in_camelcase: Tpm2NvIncrement,
+                name_in_snakecase: tpm2_nv_increment,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvIncrementCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::NvExtend,
+                name_in_camelcase: Tpm2NvExtend,
+                name_in_snakecase: tpm2_nv_extend,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvExtendCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvExtendCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvSetBits,
+                name_in_camelcase: Tpm2NvSetBits,
+                name_in_snakecase: tpm2_nv_set_bits,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvSetBitsCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvSetBitsCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvWriteLock,
+                name_in_camelcase: Tpm2NvWriteLock,
+                name_in_snakecase: tpm2_nv_write_lock,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvWriteLockCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::NvGlobalWriteLock,
+                name_in_camelcase: Tpm2NvGlobalWriteLock,
+                name_in_snakecase: tpm2_nv_global_write_lock,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2NvGlobalWriteLockCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::NvRead,
+                name_in_camelcase: Tpm2NvRead,
+                name_in_snakecase: tpm2_nv_read,
+                command_handles: {
+                    type: Tpm2NvReadCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvReadCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2NvReadResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvReadLock,
+                name_in_camelcase: Tpm2NvReadLock,
+                name_in_snakecase: tpm2_nv_read_lock,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvReadLockCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 1, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+            },
+            {
+                command_code: TpmCc::NvChangeAuth,
+                name_in_camelcase: Tpm2NvChangeAuth,
+                name_in_snakecase: tpm2_nv_change_auth,
+                nv: true,
+                command_handles: {
+                    type: Tpm2NvChangeAuthCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: nv_index, type: TpmiRhNvIndex,
+                            auth: { index: 1, role: Admin, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvChangeAuthCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvCertify,
+                name_in_camelcase: Tpm2NvCertify,
+                name_in_snakecase: tpm2_nv_certify,
+                command_handles: {
+                    type: Tpm2NvCertifyCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: sign_handle, type: TpmiDhObjectWCV,
+                            auth: { index: 1, role: User, },
+                        },
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 2, role: User, },
+                        },
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvCertifyCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2NvCertifyResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvDefineSpace2,
+                name_in_camelcase: Tpm2NvDefineSpace2,
+                name_in_snakecase: tpm2_nv_define_space2,
+                nv: true,
+                platform_auth_pp: MayBeRequired,
+                command_handles: {
+                    type: Tpm2NvDefineSpace2CommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: auth_handle, type: TpmiRhProvision,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2NvDefineSpace2CommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::NvReadPublic2,
+                name_in_camelcase: Tpm2NvReadPublic2,
+                name_in_snakecase: tpm2_nv_read_public2,
+                command_handles: {
+                    type: Tpm2NvReadPublic2CommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: nv_index, type: TpmiRhNvIndex, }
+                    },
+                },
+                response_params: {
+                    type: Tpm2NvReadPublic2ResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::AcGetCapability,
+                name_in_camelcase: Tpm2AcGetCapability,
+                name_in_snakecase: tpm2_ac_get_capability,
+                command_handles: {
+                    type: Tpm2AcGetCapabilityCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: ac, type: TpmiRhAc, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2AcGetCapabilityCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2AcGetCapabilityResponseParams,
+                    can_crypt: false,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::AcSend,
+                name_in_camelcase: Tpm2AcSend,
+                name_in_snakecase: tpm2_ac_send,
+                command_handles: {
+                    type: Tpm2AcSendCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: send_object, type: TpmiDhObject,
+                            auth: { index: 1, role: Dup, },
+                        },
+                        {
+                            name: auth_handle, type: TpmiRhNvAuth,
+                            auth: { index: 2, role: User, },
+                        },
+                        { name: ac, type: TpmiRhAc, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2AcSendCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2AcSendResponseParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::PolicyAcSendSelect,
+                name_in_camelcase: Tpm2PolicyAcSendSelect,
+                name_in_snakecase: tpm2_policy_ac_send_select,
+                command_handles: {
+                    type: Tpm2PolicyAcSendSelectCommandHandles,
+                    unmarshal_needs_limits: true,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        { name: policy_session, type: TpmiShPolicy, }
+                    },
+                },
+                command_params: {
+                    type: Tpm2PolicyAcSendSelectCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::ActSetTimeout,
+                name_in_camelcase: Tpm2ActSetTimeout,
+                name_in_snakecase: tpm2_act_set_timeout,
+                command_handles: {
+                    type: Tpm2ActSetTimeoutCommandHandles,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                    handles: {
+                        {
+                            name: act_handle, type: TpmiRhAct,
+                            auth: { index: 1, role: User, },
+                        }
+                    },
+                },
+                command_params: {
+                    type: Tpm2ActSetTimeoutCommandParams,
+                    can_crypt: false,
+                    trivial_clone: true,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            },
+            {
+                command_code: TpmCc::VendorTcgTest,
+                name_in_camelcase: Tpm2VendorTcgTest,
+                name_in_snakecase: tpm2_vendor_tcg_test,
+                command_params: {
+                    type: Tpm2VendorTcgTestCommandParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+                response_params: {
+                    type: Tpm2VendorTcgTestResponseParams,
+                    lifetime: $cp_lifetime,
+                    can_crypt: true,
+                    trivial_clone: false,
+                    unmarshal_needs_limits: false,
+                    marshalled_size_needs_limits: false,
+                    marshal_needs_limits: false,
+                },
+            }
+        ]
+    };
+}
